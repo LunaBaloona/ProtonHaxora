@@ -1,32 +1,54 @@
-import { Button, LineEdit, VerticalBox, ComboBox } from "std-widgets.slint";
+import { Button, LineEdit, VerticalBox, ScrollView } from "std-widgets.slint";
 
 export component AppWindow inherits Window {
-    title: "phxaur v0.3.0";
+    title: "protonhaxora v0.4.0";
     min_width: 450px;
+    min_height: 500px;
 
     in property <[string]> game_names: [];
     in-out property <string> app_id <=> input_id.text;
+    in-out property <string> search_text;
 
     callback run_protonhax(string);
     callback game_selected(string);
+    callback search_edited(string);
 
     VerticalBox {
         padding: 20px;
-        spacing: 15px;
+        spacing: 12px;
 
-        Text { text: "Select an Installed Game:"; font_size: 14px; }
+        Text { text: "Search & Select Game:"; font-size: 14px; }
 
-        ComboBox {
-            model: root.game_names;
-            selected(name) => {
-                root.game_selected(name);
+        LineEdit {
+            placeholder-text: "Type to search...";
+            text <=> root.search_text;
+            edited(text) => {
+                root.search_edited(text);
             }
         }
 
-        Text { text: "Or Enter App ID Manually:"; font_size: 14px; }
+        Rectangle {
+            background: #2a2a2a;
+            border-radius: 4px;
+            height: 180px;
+            ScrollView {
+                VerticalBox {
+                    padding: 5px;
+                    alignment: start;
+                    for name in root.game_names : Button {
+                        text: name;
+                        clicked => {
+                            root.game_selected(name);
+                            root.search_text = name;
+                        }
+                    }
+                }
+            }
+        }
 
+        Text { text: "App ID:"; font-size: 14px; }
         input_id := LineEdit {
-            placeholder-text: "App ID (e.g., 1601570)";
+            placeholder-text: "App ID";
             font-size: 16px;
         }
 
@@ -44,17 +66,16 @@ export component AppWindow inherits Window {
             }
         }
 
-        // --- New Instruction Message ---
         Text {
             text: "Press Launch, then when at the game's menu, press F1 to launch Aurora";
-            font-size: 12px;
-            color: #3498db; // Highlighted color for the new workflow
+            font-size: 11px;
+            color: #3498db;
             wrap: word-wrap;
             horizontal-alignment: center;
         }
 
         Button {
-            text: "Launch"; // Renamed button
+            text: "Launch";
             primary: true;
             clicked => {
                 root.run_protonhax(root.app_id);
