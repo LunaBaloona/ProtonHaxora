@@ -1,7 +1,7 @@
 import { Button, LineEdit, VerticalBox, ComboBox } from "std-widgets.slint";
 
 export component AppWindow inherits Window {
-    title: "Protonhax Runner";
+    title: "phxaur v0.3.0";
     min_width: 450px;
 
     in property <[string]> game_names: [];
@@ -14,7 +14,7 @@ export component AppWindow inherits Window {
         padding: 20px;
         spacing: 15px;
 
-        Text { text: "Select an Installed Game:"; font-size: 14px; }
+        Text { text: "Select an Installed Game:"; font_size: 14px; }
 
         ComboBox {
             model: root.game_names;
@@ -23,32 +23,38 @@ export component AppWindow inherits Window {
             }
         }
 
-        Text { text: "Or Enter App ID Manually:"; font-size: 14px; }
+        Text { text: "Or Enter App ID Manually:"; font_size: 14px; }
 
         input_id := LineEdit {
             placeholder-text: "App ID (e.g., 1601570)";
             font-size: 16px;
         }
 
-        // --- Reminder Section ---
         VerticalBox {
             padding: 0;
             spacing: 5px;
             Text {
-                text: "Remember to add this to your Steam Launch Options:";
+                text: "Steam Launch Options reminder:";
                 font-size: 11px;
-                // 'wrap' needs to be the enum type TextWrap.word-wrap
                 wrap: word-wrap;
             }
             LineEdit {
                 text: "protonhax init %COMMAND%";
                 read-only: true;
-                // Removed font-family to avoid the error
             }
         }
 
+        // --- New Instruction Message ---
+        Text {
+            text: "Press Launch, then when at the game's menu, press F1 to launch Aurora";
+            font-size: 12px;
+            color: #3498db; // Highlighted color for the new workflow
+            wrap: word-wrap;
+            horizontal-alignment: center;
+        }
+
         Button {
-            text: "Launch Aurora";
+            text: "Launch"; // Renamed button
             primary: true;
             clicked => {
                 root.run_protonhax(root.app_id);

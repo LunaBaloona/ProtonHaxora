@@ -1,11 +1,13 @@
 [package]
 name = "protonhaxora"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 
 [dependencies]
+device_query = "2.1.0"
 slint = { version = "1.9", features = ["backend-qt"] }
 steamlocate = "2.0.1"
 
 [build-dependencies]
+device_query = "2.1.0"
 slint-build = "1.9"
