@@ -1,0 +1,58 @@
+import { Button, LineEdit, VerticalBox, ComboBox } from "std-widgets.slint";
+
+export component AppWindow inherits Window {
+    title: "Protonhax Runner";
+    min_width: 450px;
+
+    in property <[string]> game_names: [];
+    in-out property <string> app_id <=> input_id.text;
+
+    callback run_protonhax(string);
+    callback game_selected(string);
+
+    VerticalBox {
+        padding: 20px;
+        spacing: 15px;
+
+        Text { text: "Select an Installed Game:"; font-size: 14px; }
+
+        ComboBox {
+            model: root.game_names;
+            selected(name) => {
+                root.game_selected(name);
+            }
+        }
+
+        Text { text: "Or Enter App ID Manually:"; font-size: 14px; }
+
+        input_id := LineEdit {
+            placeholder-text: "App ID (e.g., 1601570)";
+            font-size: 16px;
+        }
+
+        // --- Reminder Section ---
+        VerticalBox {
+            padding: 0;
+            spacing: 5px;
+            Text {
+                text: "Remember to add this to your Steam Launch Options:";
+                font-size: 11px;
+                // 'wrap' needs to be the enum type TextWrap.word-wrap
+                wrap: word-wrap;
+            }
+            LineEdit {
+                text: "protonhax init %COMMAND%";
+                read-only: true;
+                // Removed font-family to avoid the error
+            }
+        }
+
+        Button {
+            text: "Launch Aurora";
+            primary: true;
+            clicked => {
+                root.run_protonhax(root.app_id);
+            }
+        }
+    }
+}
