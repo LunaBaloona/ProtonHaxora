@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Protonhaxora
+Comment=Launch Aurora via Protonhax
+Exec=~/.local/bin/protonhaxora
+Icon=protonhaxora
+Type=Application
+Categories=Game;Utility;
+Terminal=false

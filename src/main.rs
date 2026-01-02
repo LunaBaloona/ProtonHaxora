@@ -108,7 +108,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             loop {
                 let keys = device_state.get_keys();
                 if keys.contains(&Keycode::F1) {
-                    let home = env::var("HOME").unwrap_or_else(|_| "/home/user".to_string());
+                    let home = env::var("HOME").unwrap_or_else(|_| "/tmp".to_string());
                     let path = format!("{}/AuroraLauncher/Aurora.exe", home);
 
                     let _ = Command::new("protonhax")
