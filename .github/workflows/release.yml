@@ -3,7 +3,7 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*' # Triggers only when you push a tag starting with 'v' (e.g., v0.5.0)
+      - 'v*'
 
 jobs:
   build:
@@ -15,7 +15,14 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libxkbcommon-dev libfontconfig1-dev libxcb-shape0-dev libxcb-xfixes0-dev
+          sudo apt-get install -y \
+            libxkbcommon-dev \
+            libfontconfig1-dev \
+            libxcb-shape0-dev \
+            libxcb-xfixes0-dev \
+            libx11-dev \
+            libxtst-dev \
+            pkg-config
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
