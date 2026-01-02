@@ -1,5 +1,6 @@
 ![Build Status](https://github.com/LunaBaloona/protonhaxora/actions/workflows/release.yml/badge.svg)
 
+
 # Protonhax GUI for Cheathappens Aurora
 
 ## The Problem

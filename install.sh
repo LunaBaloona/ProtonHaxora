@@ -3,12 +3,12 @@ set -e
 
 echo "--- Protonhaxora Universal Installer ---"
 
-# 1. Defining our user-agnostic paths
+# 1. Define Paths (User-Agnostic)
 BIN_DIR="$HOME/.local/bin"
 APP_DIR="$HOME/.local/share/applications"
 ICON_DIR="$HOME/.local/share/icons/hicolor/256x256/apps"
 
-# Create directories in case they don't exist
+# Create directories if they don't exist
 mkdir -p "$BIN_DIR"
 mkdir -p "$APP_DIR"
 mkdir -p "$ICON_DIR"
@@ -35,7 +35,7 @@ else
     fi
 fi
 
-# 4. Creates a Desktop Entry
+# 4. Create Desktop Entry
 echo "Creating Desktop Entry..."
 cat <<EOF > "$APP_DIR/protonhaxora.desktop"
 [Desktop Entry]
@@ -50,6 +50,7 @@ EOF
 
 # 5. Fetch and Install Protonhax Dependency
 echo "Fetching latest protonhax from LunaBaloona fork..."
+# This uses the GitHub API to find the download link for the Linux zip
 LATEST_URL=$(curl -s https://api.github.com/repos/LunaBaloona/protonhax/releases/latest | grep "browser_download_url.*zip" | cut -d '"' -f 4)
 
 if [ -z "$LATEST_URL" ]; then
