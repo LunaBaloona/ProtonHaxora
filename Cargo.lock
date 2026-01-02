@@ -3587,7 +3587,7 @@ dependencies = [
 
 [[package]]
 name = "protonhaxora"
-version = "0.5.2"
+version = "0.5.3"
 dependencies = [
  "confy",
  "device_query",

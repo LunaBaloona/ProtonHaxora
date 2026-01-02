@@ -68,4 +68,3 @@ fi
 echo ""
 echo "--- Installation Complete! ---"
 echo "You can now launch Protonhaxora from your Application Menu."
-
