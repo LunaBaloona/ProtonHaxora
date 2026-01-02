@@ -3,26 +3,44 @@ set -e
 
 echo "--- Protonhaxora Universal Installer ---"
 
-# 1. Create local bin and application folders if they don't exist
-mkdir -p ~/.local/bin
-mkdir -p ~/.local/share/applications
-mkdir -p ~/.local/share/icons/hicolor/256x256/apps
+# 1. Defining our user-agnostic paths
+BIN_DIR="$HOME/.local/bin"
+APP_DIR="$HOME/.local/share/applications"
+ICON_DIR="$HOME/.local/share/icons/hicolor/256x256/apps"
 
-# 2. Build the project
-echo "Building Protonhaxora..."
-cargo build --release
+# Create directories in case they don't exist
+mkdir -p "$BIN_DIR"
+mkdir -p "$APP_DIR"
+mkdir -p "$ICON_DIR"
 
-# 3. Install Protonhaxora Binary
-cp target/release/protonhaxora ~/.local/bin/
+# 2. Install Protonhaxora Binary
+if [ -f "./protonhaxora" ]; then
+    echo "Installing protonhaxora binary..."
+    cp ./protonhaxora "$BIN_DIR/"
+    chmod +x "$BIN_DIR/protonhaxora"
+else
+    echo "Error: protonhaxora binary not found in current directory."
+    echo "Please run this script from the folder containing the release assets."
+    exit 1
+fi
 
-# 4. Install Icon and Desktop Entry
-# This ensures the icon appears in the App Menu and File Manager
-cp ui/icon.png ~/.local/share/icons/hicolor/256x256/apps/protonhaxora.png
+# 3. Install Icon
+if [ -f "./icon.png" ]; then
+    echo "Installing icon..."
+    cp ./icon.png "$ICON_DIR/protonhaxora.png"
+else
+    # Fallback check if icon is in ui/
+    if [ -f "./ui/icon.png" ]; then
+        cp ./ui/icon.png "$ICON_DIR/protonhaxora.png"
+    fi
+fi
 
-cat <<EOF > ~/.local/share/applications/protonhaxora.desktop
+# 4. Creates a Desktop Entry
+echo "Creating Desktop Entry..."
+cat <<EOF > "$APP_DIR/protonhaxora.desktop"
 [Desktop Entry]
 Name=Protonhaxora
-Exec=$HOME/.local/bin/protonhaxora
+Exec=$BIN_DIR/protonhaxora
 Icon=protonhaxora
 Type=Application
 Categories=Game;Utility;
@@ -30,15 +48,23 @@ Comment=Launch Aurora via Protonhax
 Terminal=false
 EOF
 
-# 5. Fetch and Install Protonhax from your fork
+# 5. Fetch and Install Protonhax Dependency
 echo "Fetching latest protonhax from LunaBaloona fork..."
-# This finds the latest release zip URL automatically
 LATEST_URL=$(curl -s https://api.github.com/repos/LunaBaloona/protonhax/releases/latest | grep "browser_download_url.*zip" | cut -d '"' -f 4)
 
-curl -L $LATEST_URL -o protonhax_latest.zip
-unzip -o protonhax_latest.zip -d /tmp/protonhax_temp
-cp /tmp/protonhax_temp/protonhax ~/.local/bin/
-chmod +x ~/.local/bin/protonhax
+if [ -z "$LATEST_URL" ]; then
+    echo "Could not find protonhax release. Please check https://github.com/LunaBaloona/protonhax/releases"
+else
+    curl -L "$LATEST_URL" -o /tmp/protonhax.zip
+    unzip -o /tmp/protonhax.zip -d /tmp/protonhax_extracted
+    # Moves the binary specifically (handling potential subfolders in zip)
+    find /tmp/protonhax_extracted -type f -name "protonhax" -exec cp {} "$BIN_DIR/" \;
+    chmod +x "$BIN_DIR/protonhax"
+    rm -rf /tmp/protonhax.zip /tmp/protonhax_extracted
+    echo "Protonhax dependency installed to $BIN_DIR"
+fi
 
+echo ""
 echo "--- Installation Complete! ---"
-echo "If you haven't yet, you should install Aurora before running Prootonhaxora."
+echo "You can now launch Protonhaxora from your Application Menu."
+
